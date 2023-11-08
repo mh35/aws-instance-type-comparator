@@ -19,6 +19,8 @@ class InstanceService(str, Enum):
     DATABASE = "db"  # RDS, DocumentDB, MemoryDB for Redis, Neptune
     ELASTICACHE = "cache"
     SAGEMAKER = "ml"
+    MAINFRAME_MODERNIZATION = "M2"
+    BRACKET_TRAINING = "ml-Training"
 
 
 # Amazon FinSpace
