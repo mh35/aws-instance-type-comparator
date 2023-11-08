@@ -43,6 +43,12 @@ class InstanceService(str, Enum):
     MAINFRAME_MODERNIZATION = "M2"
     BRACKET_TRAINING = "ml-Training"
     BLOCKCHAIN = "bc"
+    FINSPACE = "kx"
+    REDSHIFT = "redshift"
+    APPSYNC_CACHE = "as_cache"
+    CODEBUILD = "build"
+    APPSTREAM = "stream"
+    HEALTHOMICS = "omics"
 
 
 _FIXED_INSTANCE_SIZES = ["nano", "micro", "small", "medium", "large"]
