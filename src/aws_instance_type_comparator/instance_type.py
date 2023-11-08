@@ -4,6 +4,9 @@ from __future__ import annotations
 from enum import Enum
 
 
+# General
+
+
 class InstanceService(str, Enum):
     """Service for instance type."""
 
@@ -11,3 +14,23 @@ class InstanceService(str, Enum):
     CLOUDSEARCH = "cloudsearch"
     OPENSEARCH = "opensearch"
     KAFKA = "kafka"
+    MQ = "mq"
+    SIMSPACE = "sim"
+    DATABASE = "db"  # RDS, DocumentDB, MemoryDB for Redis, Neptune
+    ELASTICACHE = "cache"
+    SAGEMAKER = "ml"
+
+
+# Amazon FinSpace
+
+# Amazon Redshift
+
+# AWS AppSync cache
+
+# Amazon Managed Blockchain
+
+# AWS CodeBuild
+
+# Amazon AppStream 2.0
+
+# Amazon HealthOmics private workflow
