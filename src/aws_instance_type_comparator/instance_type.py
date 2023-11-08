@@ -5,6 +5,26 @@ import re
 from enum import Enum
 
 
+# Instance size format
+# EC2 and many services: family.size
+# Amazon CloudSearch: search.family.size
+# Amazon OpenSearch: family.size.search
+# Amazon MSK: kafka.family.size
+# Amazon MQ: mq.family.size
+# AWS SimSpace Weaver: sim.family.size
+# Database services: db.family.size
+# Amazon ElastiCache: cache.family.size
+# Amazon SageMaker: ml.family.size
+# AWS Mainframe Modernization: M2.family.size
+# Amazon Braket hybrid jobs: ml.family.size-Training
+# Amazon Managed Blockchain: bc.family.size
+# Amazon FinSpace: kx.s.size
+# Amazon Redshift: family.size
+# AWS AppSync cache: cache.size
+# AWS CodeBuild: family.size
+# Amazon AppStream 2.0: stream.type.size or stream.type.family.size
+# Amazon HealthOmics private workflow: omics.type.size or omics.family.size
+
 # General
 
 
@@ -22,6 +42,7 @@ class InstanceService(str, Enum):
     SAGEMAKER = "ml"
     MAINFRAME_MODERNIZATION = "M2"
     BRACKET_TRAINING = "ml-Training"
+    BLOCKCHAIN = "bc"
 
 
 _FIXED_INSTANCE_TYPES = ["nano", "micro", "small", "medium", "large"]
@@ -41,7 +62,13 @@ class InstanceSize:
         """
         if name in _FIXED_INSTANCE_TYPES:
             self._name = name
-            self._size_value: int = 2 ** _FIXED_INSTANCE_TYPES.index(name)
+            self._size_value: int = 3 * 2 ** _FIXED_INSTANCE_TYPES.index(name)
+            self._is_metal = False
+            return
+        if name == "xplus":
+            # For Amazon RedShift
+            self._name = name
+            self._size_value = 128
             self._is_metal = False
             return
         if name == "metal":
@@ -61,9 +88,9 @@ class InstanceSize:
         self._name = name
         self._is_metal = False
         if not xl_md[1]:
-            self._size_value = 32
+            self._size_value = 96
             return
-        self._size_value = 32 * int(xl_md[1])
+        self._size_value = 96 * int(xl_md[1])
 
     def __str__(self: InstanceSize) -> str:
         """Get instance size name.
