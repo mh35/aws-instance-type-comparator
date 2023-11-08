@@ -21,7 +21,7 @@ from enum import Enum
 # Amazon FinSpace: kx.s.size
 # Amazon Redshift: family.size
 # AWS AppSync cache: cache.size
-# AWS CodeBuild: family.size
+# AWS CodeBuild: build.family.size
 # Amazon AppStream 2.0: stream.type.size or stream.type.family.size
 # Amazon HealthOmics private workflow: omics.type.size or omics.family.size
 
@@ -45,7 +45,7 @@ class InstanceService(str, Enum):
     BLOCKCHAIN = "bc"
 
 
-_FIXED_INSTANCE_TYPES = ["nano", "micro", "small", "medium", "large"]
+_FIXED_INSTANCE_SIZES = ["nano", "micro", "small", "medium", "large"]
 
 
 class InstanceSize:
@@ -60,9 +60,9 @@ class InstanceSize:
         Raises:
             ValueError: If instance size name is invalid
         """
-        if name in _FIXED_INSTANCE_TYPES:
+        if name in _FIXED_INSTANCE_SIZES:
             self._name = name
-            self._size_value: int = 3 * 2 ** _FIXED_INSTANCE_TYPES.index(name)
+            self._size_value: int = 3 * 2 ** _FIXED_INSTANCE_SIZES.index(name)
             self._is_metal = False
             return
         if name == "xplus":
@@ -231,6 +231,26 @@ class InstanceSize:
         if not self._is_metal and target._is_metal:
             return False
         return self._size_value >= target._size_value
+
+
+_REDSHIFT_FAMILIES = ["dc", "ra", "ds"]
+_CODEBUILD_FAMILIES = ["arm", "general", "gpu"]
+
+
+class InstanceFamily:
+    """Instance family."""
+
+    def __init__(self: InstanceFamily, name: str) -> None:
+        """Initialize instance family."""
+        family_md = re.match(r"^([A-Za-z0-9-]+)(\d+)([A-Za-z0-9-]*)$", name)
+        if not family_md:
+            raise ValueError("Invalid instance family")
+        self._name = name
+        self._family_name = family_md[1]
+        self._family_gen = int(family_md[2])
+        self._additional_flags = family_md[3]
+        self._is_redshift = family_md[1] in _REDSHIFT_FAMILIES
+        self._is_codebuild = family_md[1] in _CODEBUILD_FAMILIES
 
 
 # Amazon FinSpace
