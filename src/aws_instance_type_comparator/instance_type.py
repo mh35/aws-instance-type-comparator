@@ -4,7 +4,6 @@ from __future__ import annotations
 import re
 from enum import Enum
 
-
 # Instance size format
 # EC2 and many services: family.size
 # Amazon CloudSearch: search.family.size
@@ -241,6 +240,46 @@ class InstanceSize:
 
 _REDSHIFT_FAMILIES = ["dc", "ra", "ds"]
 _CODEBUILD_FAMILIES = ["arm", "general", "gpu"]
+_NORMAL_FAMILY_ORDERS = [
+    # General purpose
+    "m",
+    "mac",
+    "t",
+    # Compute optimized
+    "c",
+    "cc",
+    # Memory optimized
+    "r",
+    "x",
+    "u-3tb",
+    "u-6tb",
+    "u-9tb",
+    "u-12tb",
+    "u-18tb",
+    "u-24tb",
+    "z",
+    # High-speed computing
+    "p",
+    "dl",
+    "trn",
+    "inf",
+    "g",
+    "f",
+    "vt",
+    "cg",
+    # Storage optimized
+    "i",
+    "im",
+    "is",
+    "d",
+    "h",
+    "hi",
+    "hs",
+    # HPC optimized
+    "hpc",
+    # OpenSearch specific family
+    "ultrawarm",
+]
 
 
 class InstanceFamily:
@@ -251,10 +290,16 @@ class InstanceFamily:
         family_md = re.match(r"^([A-Za-z0-9-]+)(\d+)([A-Za-z0-9-]*)$", name)
         if not family_md:
             raise ValueError("Invalid instance family")
+        if (
+            family_md[1] not in _REDSHIFT_FAMILIES
+            and family_md[1] not in _CODEBUILD_FAMILIES
+            and family_md[1] not in _NORMAL_FAMILY_ORDERS
+        ):
+            raise ValueError("Invalid instance family")
         self._name = name
-        self._family_name = family_md[1]
+        self._family_name: str = family_md[1]
         self._family_gen = int(family_md[2])
-        self._additional_flags = family_md[3]
+        self._additional_flags: str = family_md[3]
         self._is_redshift = family_md[1] in _REDSHIFT_FAMILIES
         self._is_codebuild = family_md[1] in _CODEBUILD_FAMILIES
 
