@@ -74,3 +74,26 @@ def test_le() -> None:
     assert sz3 <= sz6
     assert sz5 <= sz6
     assert sz6 <= sz7
+
+
+def test_gt() -> None:
+    """Greater than test."""
+    sz1 = InstanceSize("large")
+    sz2 = InstanceSize("large")
+    sz3 = InstanceSize("2xlarge")
+    sz4 = InstanceSize("micro")
+    sz5 = InstanceSize("metal")
+    sz6 = InstanceSize("metal-24xl")
+    sz7 = InstanceSize("metal-48xl")
+    assert not sz1 > sz2
+    assert not sz1 > sz3
+    assert sz3 > sz1
+    assert sz1 > sz4
+    assert not sz1 > sz5
+    assert not sz1 > sz6
+    assert sz3 > sz4
+    assert not sz3 > sz5
+    assert not sz3 > sz6
+    assert not sz5 > sz6
+    assert not sz6 > sz7
+    assert sz7 > sz6
